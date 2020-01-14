@@ -20,21 +20,27 @@ defmodule ExploringMarsTest do
   end
 
   test "position_rover with valid coordinates returns the rover position" do
-    assert {:ok, %{x_pos: 2, y_pos: 3}} == ExploringMars.position_rover(%{x: 4, y: 5}, 2, 3)
+    assert {:ok, %Rover{x: 2, y: 3, direction: "N"}} ==
+             ExploringMars.position_rover(%{x: 4, y: 5}, 2, 3, "N")
   end
 
   test "position_rover with invalid coordinates returns an error with the positions and the plateau" do
-    assert {:error, %{x_pos: 12, y_pos: 3}, %{x: 4, y: 5}} ==
-             ExploringMars.position_rover(%{x: 4, y: 5}, 12, 3)
+    assert {:error, %Rover{x: 12, y: 3, direction: "E"}, %{x: 4, y: 5}} ==
+             ExploringMars.position_rover(%{x: 4, y: 5}, 12, 3, "E")
   end
 
   test "position_rover with zeroed coordinates returns the rover position" do
-    assert {:ok, %{x_pos: 0, y_pos: 3}} ==
-             ExploringMars.position_rover(%{x: 4, y: 5}, 0, 3)
+    assert {:ok, %Rover{x: 0, y: 3, direction: "W"}} ==
+             ExploringMars.position_rover(%{x: 4, y: 5}, 0, 3, "W")
   end
 
   test "position_rover with negative coordinates returns an error with the positions and the plateau" do
-    assert {:error, %{x_pos: 2, y_pos: -3}, %{x: 4, y: 5}} ==
-             ExploringMars.position_rover(%{x: 4, y: 5}, 2, -3)
+    assert {:error, %Rover{x: 2, y: -3, direction: "S"}, %{x: 4, y: 5}} ==
+             ExploringMars.position_rover(%{x: 4, y: 5}, 2, -3, "S")
+  end
+
+  test "position_rover with invalid direction returns an error with the positions and the plateau" do
+    assert {:error, %Rover{x: 2, y: 3, direction: "R"}, %{x: 4, y: 5}} ==
+             ExploringMars.position_rover(%{x: 4, y: 5}, 2, 3, "R")
   end
 end
