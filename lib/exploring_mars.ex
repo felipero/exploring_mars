@@ -4,15 +4,19 @@ defmodule ExploringMars do
   """
 
   @doc """
-  Hello world.
+  Creates the plateau mesh based on the given coordinates `x` and `y`.
+  The inferior left is always (0,0).
 
   ## Examples
 
-      iex> ExploringMars.hello()
-      :world
+      iex> ExploringMars.config_plateau(2, 3)
+      {:ok, %{x: 2, y: 3}}
 
+      iex> ExploringMars.config_plateau(-1, -5)
+      {:error, %{message: "coordinates need to be greater than zero."}}
   """
-  def hello do
-    :world
-  end
+  def config_plateau(x, y) when x > 0 and y > 0, do: {:ok, %{x: x, y: y}}
+
+  def config_plateau(_, _), do: {:error, %{message: "coordinates need to be greater than zero."}}
+
 end
