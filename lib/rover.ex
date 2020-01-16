@@ -13,6 +13,17 @@ defmodule Rover do
           direction: String.t()
         }
 
+  defimpl String.Chars, for: Rover do
+    @doc """
+    Converts Rover to a string
+
+    ## Examples
+        iex> to_string(%Rover{x: 3, y: 4, direction: "E"})
+        "3 4 E"
+    """
+    def to_string(%Rover{x: x, y: y, direction: dir}), do: "#{x} #{y} #{dir}"
+  end
+
   @doc """
   Rotates the rover.
 
@@ -60,18 +71,16 @@ defmodule Rover do
   Explore a plateau by processing a sequence of instructions from a string.
 
   ## Examples
-      iex> Rover.explore(%Rover{x: 2, y: 2, direction: "N"}, %{x: 5, y: 5}, "LMLMLMLMM")
+      iex> Rover.explore(%Rover{x: 2, y: 2, direction: "N"}, %{x: 5, y: 5}, ["L","M","L","M", "L","M","L","M","M"])
       %Rover{x: 2, y: 3, direction: "N"}
 
-      iex> Rover.explore(%Rover{x: 2, y: 2, direction: "N"}, %{x: 5, y: 5}, "MMRMMM")
+      iex> Rover.explore(%Rover{x: 2, y: 2, direction: "N"}, %{x: 5, y: 5}, ["M","M","R","M","M","M"])
       %Rover{x: 5, y: 4, direction: "E"}
 
-      iex> Rover.explore(%Rover{x: 2, y: 2, direction: "N"}, %{x: 5, y: 5}, "MMMM")
-      {:error, %Rover{x: 2, y: 6, direction: "N"}, message: "Rover got out of the plateau."}
+      iex> Rover.explore(%Rover{x: 2, y: 2, direction: "N"}, %{x: 5, y: 5}, ["M","M","M","M"])
+      {:error, %Rover{x: 2, y: 6, direction: "N"}, %{x: 5, y: 5}, message: "Rover got out of the plateau."}
   """
-  def explore(rover, %{x: plateau_x, y: plateau_y}, instructions) do
-    instructions = String.split(instructions, "", trim: true)
-
+  def explore(rover, plateau = %{x: plateau_x, y: plateau_y}, instructions) do
     rover =
       Enum.reduce(instructions, rover, fn instruction, rover ->
         case(process_instruction(rover, instruction)) do
@@ -86,7 +95,7 @@ defmodule Rover do
 
     case rover do
       %Rover{x: x, y: y} when x > plateau_x or y > plateau_y ->
-        {:error, rover, message: "Rover got out of the plateau."}
+        {:error, rover, plateau, message: "Rover got out of the plateau."}
 
       _ ->
         rover
