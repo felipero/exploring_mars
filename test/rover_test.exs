@@ -2,7 +2,7 @@ defmodule RoverTest do
   use ExUnit.Case
   doctest Rover
 
-  describe "rotate" do
+  describe "rotate/2" do
     test "to left and returns a the new rover positioning" do
       assert %Rover{x: 1, y: 2, direction: "E"} ==
                Rover.rotate("L", %Rover{x: 1, y: 2, direction: "S"})
@@ -19,7 +19,7 @@ defmodule RoverTest do
     end
   end
 
-  describe "move" do
+  describe "move/1" do
     test "to south returns the rover in the new position" do
       assert %Rover{x: 10, y: 9, direction: "S"} ==
                Rover.move(%Rover{x: 10, y: 10, direction: "S"})
@@ -41,7 +41,7 @@ defmodule RoverTest do
     end
   end
 
-  describe "explore" do
+  describe "explore/3" do
     test "returns the rover with updated position" do
       assert %Rover{x: 9, y: 11, direction: "N"} ==
                Rover.explore(
@@ -68,7 +68,7 @@ defmodule RoverTest do
     end
   end
 
-  describe "land" do
+  describe "land/4" do
     test "land with valid coordinates returns the rover position" do
       assert {:ok, %Rover{x: 2, y: 3, direction: "N"}} ==
                Rover.land(%{x: 4, y: 5}, 2, 3, "N")
@@ -98,7 +98,7 @@ defmodule RoverTest do
     end
   end
 
-  describe "to_string" do
+  describe "to_string/1" do
     test "returns the position and direction in a sequencial string" do
       assert "12 134 N" == to_string(%Rover{x: 12, y: 134, direction: "N"})
     end
