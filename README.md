@@ -1,21 +1,41 @@
 # ExploringMars
 
-**TODO: Add description**
+Elixir library to simulate a rover exploring a plateau in Mars.
 
-## Installation
+## Usage
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `exploring_mars` to your list of dependencies in `mix.exs`:
+### Install the dependencies
+
+`mix deps.get`
+
+### Running using iex
+
+`iex -S mix`
+
+You can run passing your custom set of instructions like this:
 
 ```elixir
-def deps do
-  [
-    {:exploring_mars, "~> 0.1.0"}
-  ]
-end
+ iex> ExploringMars.process_rovers([["4", "4"], ["1", "3", "E"], ["MR"]])
+ ["2 3 S"]
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/exploring_mars](https://hexdocs.pm/exploring_mars).
+or you can add the instructions to a file called `./instructions.txt` using this format:
 
+```
+5 5
+1 3 E
+MRL
+2 5 S
+MMML
+```
+
+then run in the iex like this:
+
+```elixir
+iex> ExploringMars.main([])
+["2 3 E", "2 2 E"]
+```
+
+### Runing the tests
+
+`mix test`
