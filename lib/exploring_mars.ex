@@ -20,20 +20,22 @@ defmodule ExploringMars do
   def config_plateau(_, _), do: {:error, %{message: "coordinates need to be greater than zero."}}
 
   @doc """
-  Positions a rover inside the given `plateau` using the given coordinates `x` and `y`.
-  If the positions are not valid (out of the `plateau` mesh, for example), it will return an error.
+  Process a list containing the positions and the instructions for a Rover.
 
   ## Examples
-      iex> ExploringMars.position_rover(%{x: 13, y: 2}, 12, 1, "N")
-      {:ok, %Rover{x: 12, y: 1, direction: "N"}}
+      iex> ExploringMars.process_rover([["6", "4", "N"], ["LLMM"]], %{x: 10, y: 10})
+      %Rover{x: 6, y: 2, direction: "S"}
 
-      iex> ExploringMars.position_rover(%{x: 13, y: 2}, 10, 8, "E")
-      {:error, %Rover{x: 10, y: 8, direction: "E"}, %{x: 13, y: 2}}
+      iex> ExploringMars.process_rover([["13", "2", "E"], ["LLMM"]], %{x: 5, y: 5})
+      {:error, %Rover{x: 13, y: 2, direction: "E"}, %{x: 5, y: 5}, message: "Landed out of plateau."}
+
+      iex> ExploringMars.process_rover([["2", "2", "N"], ["MMMM"]], %{x: 5, y: 5})
+      {:error, %Rover{x: 2, y: 6, direction: "N"}, %{x: 5, y: 5}, message: "Rover got out of the plateau."}
   """
-  def position_rover(%{x: right_boundary, y: top_boundary}, x, y, dir)
-      when x in 0..right_boundary and y in 0..top_boundary and dir in ["N", "E", "W", "S"],
-      do: {:ok, %Rover{x: x, y: y, direction: dir}}
-
-  def position_rover(%{x: right_boundary, y: top_boundary}, x, y, dir),
-    do: {:error, %Rover{x: x, y: y, direction: dir}, %{x: right_boundary, y: top_boundary}}
+  def process_rover([[xs, ys, dir], [instructions]], plateau) do
+    case Rover.land(plateau, String.to_integer(xs), String.to_integer(ys), dir) do
+      {:ok, rover} -> rover |> Rover.explore(plateau, String.split(instructions, "", trim: true))
+      error -> error
+    end
+  end
 end
