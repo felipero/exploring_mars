@@ -100,4 +100,22 @@ defmodule Rover do
     do: rotate(instruction, rover)
 
   defp process_instruction(rover, _), do: rover
+
+  @doc """
+  Lands a rover inside the given `plateau` using the given coordinates `x` and `y`.
+  If the positions are not valid (out of the `plateau` mesh, for example), it will return an error.
+
+  ## Examples
+      iex> Rover.land(%{x: 13, y: 2}, 12, 1, "N")
+      {:ok, %Rover{x: 12, y: 1, direction: "N"}}
+
+      iex> Rover.land(%{x: 13, y: 2}, 10, 8, "E")
+      {:error, %Rover{x: 10, y: 8, direction: "E"}, %{x: 13, y: 2}, message: "Landed out of plateau."}
+  """
+  def land(%{x: xboundary, y: yboundary}, x, y, dir)
+      when x in 0..xboundary and y in 0..yboundary and dir in ["N", "E", "W", "S"],
+      do: {:ok, %Rover{x: x, y: y, direction: dir}}
+
+  def land(plateau, x, y, dir),
+    do: {:error, %Rover{x: x, y: y, direction: dir}, plateau, message: "Landed out of plateau."}
 end

@@ -53,6 +53,36 @@ defmodule RoverTest do
     test "ignores invalid instructions" do
       assert %Rover{x: 9, y: 10, direction: "W"} ==
                Rover.explore(%Rover{x: 10, y: 10, direction: "W"}, %{x: 100, y: 100}, "AAABM")
+
+  describe "land" do
+    test "land with valid coordinates returns the rover position" do
+      assert {:ok, %Rover{x: 2, y: 3, direction: "N"}} ==
+               Rover.land(%{x: 4, y: 5}, 2, 3, "N")
+    end
+
+    test "land with invalid coordinates returns an error with the positions and the plateau" do
+      assert {:error, %Rover{x: 12, y: 3, direction: "E"}, %{x: 4, y: 5},
+              message: "Landed out of plateau."} ==
+               Rover.land(%{x: 4, y: 5}, 12, 3, "E")
+    end
+
+    test "land with zeroed coordinates returns the rover position" do
+      assert {:ok, %Rover{x: 0, y: 3, direction: "W"}} ==
+               Rover.land(%{x: 4, y: 5}, 0, 3, "W")
+    end
+
+    test "land with negative coordinates returns an error with the positions and the plateau" do
+      assert {:error, %Rover{x: 2, y: -3, direction: "S"}, %{x: 4, y: 5},
+              message: "Landed out of plateau."} ==
+               Rover.land(%{x: 4, y: 5}, 2, -3, "S")
+    end
+
+    test "land with invalid direction returns an error with the positions and the plateau" do
+      assert {:error, %Rover{x: 2, y: 3, direction: "R"}, %{x: 4, y: 5},
+              message: "Landed out of plateau."} ==
+               Rover.land(%{x: 4, y: 5}, 2, 3, "R")
+    end
+  end
     end
   end
 end
