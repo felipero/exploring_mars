@@ -57,13 +57,16 @@ defmodule Rover do
   ## Examples
       iex> Rover.move(%Rover{x: 1, y: 1, direction: "N"})
       %Rover{x: 1, y: 2, direction: "N"}
+
+      iex> Rover.move(%Rover{x: 1, y: 1, direction: "W"})
+      %Rover{x: 0, y: 1, direction: "W"}
   """
   def move(rover) do
     case rover.direction do
       "N" -> %{rover | y: rover.y + 1}
-      "E" -> %{rover | x: rover.y + 1}
+      "E" -> %{rover | x: rover.x + 1}
       "S" -> %{rover | y: rover.y - 1}
-      "W" -> %{rover | x: rover.y - 1}
+      "W" -> %{rover | x: rover.x - 1}
     end
   end
 

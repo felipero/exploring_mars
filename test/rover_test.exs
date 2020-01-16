@@ -26,13 +26,13 @@ defmodule RoverTest do
     end
 
     test "to east returns the rover in the new position" do
-      assert %Rover{x: 11, y: 10, direction: "E"} ==
-               Rover.move(%Rover{x: 10, y: 10, direction: "E"})
+      assert %Rover{x: 11, y: 8, direction: "E"} ==
+               Rover.move(%Rover{x: 10, y: 8, direction: "E"})
     end
 
     test "to west returns the rover in the new position" do
-      assert %Rover{x: 9, y: 10, direction: "W"} ==
-               Rover.move(%Rover{x: 10, y: 10, direction: "W"})
+      assert %Rover{x: 4, y: 10, direction: "W"} ==
+               Rover.move(%Rover{x: 5, y: 10, direction: "W"})
     end
 
     test "to north returns the rover in the new position" do
