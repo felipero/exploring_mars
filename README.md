@@ -1,6 +1,7 @@
 # ExploringMars
 
 Elixir library to simulate a rover exploring a plateau in Mars.
+Make sure you read the documentation in the modules and funcitons along with the tests they specify exactly how this code behaves.
 
 ## Usage
 
