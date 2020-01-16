@@ -39,4 +39,22 @@ defmodule ExploringMarsTest do
                ExploringMars.process_rover([["2", "2", "N"], ["MMMM"]], %{x: 5, y: 5})
     end
   end
+
+  describe "process_rovers/1" do
+    test "configs the plateau and return the rover with correct position" do
+      assert ["2 3 S"] ==
+               ExploringMars.process_rovers([["4", "4"], ["1", "3", "E"], ["MR"]])
+    end
+
+    test "configs the plateau and ignores error for rovers" do
+      assert ["ERROR: Landed out of plateau. -> 1 13 E with plateau %{x: 4, y: 4}", "4 2 E"] ==
+               ExploringMars.process_rovers([
+                 ["4", "4"],
+                 ["1", "13", "E"],
+                 ["MR"],
+                 ["4", "3", "E"],
+                 ["RML"]
+               ])
+    end
+  end
 end

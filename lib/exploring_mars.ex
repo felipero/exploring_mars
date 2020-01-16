@@ -2,6 +2,31 @@ defmodule ExploringMars do
   @moduledoc """
   Documentation for ExploringMars.
   """
+  require Logger
+
+  def main(_) do
+    File.stream!("instructions.txt")
+    |> Stream.map(&String.split(&1, ["\n", " "], trim: true))
+    |> Enum.to_list()
+    |> process_rovers
+  end
+
+  def process_rovers([head | tail]) do
+    {:ok, plateau} = Kernel.apply(&config_plateau/2, Enum.map(head, &String.to_integer(&1)))
+
+    tail
+    |> Enum.chunk_every(2)
+    |> Enum.map(fn rover_set ->
+      case process_rover(rover_set, plateau) do
+        {:error, rover, plateau, [message: msg]} ->
+          Logger.error("ERROR: #{msg} -> #{rover} with plateau #{inspect(plateau)}")
+          "ERROR: #{msg} -> #{rover} with plateau #{inspect(plateau)}"
+
+        rover ->
+          to_string(rover)
+      end
+    end)
+  end
 
   @doc """
   Creates the plateau mesh based on the given coordinates `x` and `y`.
@@ -34,8 +59,11 @@ defmodule ExploringMars do
   """
   def process_rover([[xs, ys, dir], [instructions]], plateau) do
     case Rover.land(plateau, String.to_integer(xs), String.to_integer(ys), dir) do
-      {:ok, rover} -> rover |> Rover.explore(plateau, String.split(instructions, "", trim: true))
-      error -> error
+      {:ok, rover} ->
+        rover |> Rover.explore(plateau, String.split(instructions, "", trim: true))
+
+      error ->
+        error
     end
   end
 end
